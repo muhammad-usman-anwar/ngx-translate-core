@@ -1,5 +1,5 @@
-import {EventEmitter} from "@angular/core";
-import {DefaultLangChangeEvent, LangChangeEvent, TranslationChangeEvent} from "./translate.service";
+import { EventEmitter } from "@angular/core";
+import { DefaultLangChangeEvent, LangChangeEvent, TranslationChangeEvent } from "./translate.service";
 
 export class TranslateStore {
   /**
@@ -10,7 +10,11 @@ export class TranslateStore {
   /**
    * The lang currently used
    */
-  public currentLang: string = this.defaultLang;
+  public currentLang: string;
+
+  constructor() {
+    this.currentLang = this.defaultLang;
+  }
 
   /**
    * a list of translations per lang
