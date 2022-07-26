@@ -1,13 +1,13 @@
-import {EventEmitter, Inject, Injectable, InjectionToken} from "@angular/core";
-import {concat, forkJoin, isObservable, Observable, of, defer} from "rxjs";
-import {concatMap, map, shareReplay, switchMap, take} from "rxjs/operators";
-import {MissingTranslationHandler, MissingTranslationHandlerParams} from "./missing-translation-handler";
-import {TranslateCompiler} from "./translate.compiler";
-import {TranslateLoader} from "./translate.loader";
-import {TranslateParser} from "./translate.parser";
+import { EventEmitter, Inject, Injectable, InjectionToken } from "@angular/core";
+import { concat, forkJoin, isObservable, Observable, of, defer } from "rxjs";
+import { concatMap, map, shareReplay, switchMap, take } from "rxjs/operators";
+import { MissingTranslationHandler, MissingTranslationHandlerParams } from "./missing-translation-handler";
+import { TranslateCompiler } from "./translate.compiler";
+import { TranslateLoader } from "./translate.loader";
+import { TranslateParser } from "./translate.parser";
 
-import {TranslateStore} from "./translate.store";
-import {isDefined, mergeDeep} from "./util";
+import { TranslateStore } from "./translate.store";
+import { isDefined, mergeDeep } from "./util";
 
 export const USE_STORE = new InjectionToken<string>('USE_STORE');
 export const USE_DEFAULT_LANG = new InjectionToken<string>('USE_DEFAULT_LANG');
@@ -151,14 +151,14 @@ export class TranslateService {
    * @param defaultLanguage Set the default language using configuration
    */
   constructor(public store: TranslateStore,
-              public currentLoader: TranslateLoader,
-              public compiler: TranslateCompiler,
-              public parser: TranslateParser,
-              public missingTranslationHandler: MissingTranslationHandler,
-              @Inject(USE_DEFAULT_LANG) private useDefaultLang: boolean = true,
-              @Inject(USE_STORE) private isolate: boolean = false,
-              @Inject(USE_EXTEND) private extend: boolean = false,
-              @Inject(DEFAULT_LANGUAGE) defaultLanguage: string) {
+    public currentLoader: TranslateLoader,
+    public compiler: TranslateCompiler,
+    public parser: TranslateParser,
+    public missingTranslationHandler: MissingTranslationHandler,
+    @Inject(USE_DEFAULT_LANG) private useDefaultLang: boolean = true,
+    @Inject(USE_STORE) private isolate: boolean = false,
+    @Inject(USE_EXTEND) private extend: boolean = false,
+    @Inject(DEFAULT_LANGUAGE) defaultLanguage: string) {
     /** set the default language from configuration */
     if (defaultLanguage) {
       this.setDefaultLang(defaultLanguage);
@@ -262,7 +262,7 @@ export class TranslateService {
     this.loadingTranslations
       .subscribe({
         next: (res: Object) => {
-          this.translations[lang] = this.extend && this.translations[lang] ? { ...res, ...this.translations[lang] } : res;
+          this.translations[lang] = this.extend && this.translations[lang] ? { ...this.translations[lang], ...res } : res;
           this.updateLangs();
           this.pending = false;
         },
@@ -286,7 +286,7 @@ export class TranslateService {
       this.translations[lang] = translations;
     }
     this.updateLangs();
-    this.onTranslationChange.emit({lang: lang, translations: this.translations[lang]});
+    this.onTranslationChange.emit({ lang: lang, translations: this.translations[lang] });
   }
 
   /**
@@ -353,7 +353,7 @@ export class TranslateService {
     }
 
     if (typeof res === "undefined") {
-      let params: MissingTranslationHandlerParams = {key, translateService: this};
+      let params: MissingTranslationHandlerParams = { key, translateService: this };
       if (typeof interpolateParams !== 'undefined') {
         params.interpolateParams = interpolateParams;
       }
@@ -460,7 +460,7 @@ export class TranslateService {
   public set(key: string, value: string, lang: string = this.currentLang): void {
     this.translations[lang][key] = this.compiler.compile(value, lang);
     this.updateLangs();
-    this.onTranslationChange.emit({lang: lang, translations: this.translations[lang]});
+    this.onTranslationChange.emit({ lang: lang, translations: this.translations[lang] });
   }
 
   /**
@@ -468,7 +468,7 @@ export class TranslateService {
    */
   private changeLang(lang: string): void {
     this.currentLang = lang;
-    this.onLangChange.emit({lang: lang, translations: this.translations[lang]});
+    this.onLangChange.emit({ lang: lang, translations: this.translations[lang] });
 
     // if there is no default lang, use the one that we just set
     if (this.defaultLang == null) {
@@ -481,7 +481,7 @@ export class TranslateService {
    */
   private changeDefaultLang(lang: string): void {
     this.defaultLang = lang;
-    this.onDefaultLangChange.emit({lang: lang, translations: this.translations[lang]});
+    this.onDefaultLangChange.emit({ lang: lang, translations: this.translations[lang] });
   }
 
   /**
