@@ -246,7 +246,7 @@ export class TranslateService {
    * Gets an object of translations for a given language with the current loader
    * and passes it through the compiler
    */
-  public getTranslation(lang: string): Observable<any> {
+  public getTranslation(lang: string, notify = false): Observable<any> {
     this.pending = true;
     const loadingTranslations = this.currentLoader.getTranslation(lang).pipe(
       shareReplay(1),
@@ -265,6 +265,8 @@ export class TranslateService {
           this.translations[lang] = this.extend && this.translations[lang] ? { ...this.translations[lang], ...res } : res;
           this.updateLangs();
           this.pending = false;
+          if (notify)
+            this.onTranslationChange.emit({ lang, translations: this.translations[lang] });
         },
         error: (err: any) => {
           this.pending = false;
@@ -489,7 +491,7 @@ export class TranslateService {
    */
   public reloadLang(lang: string): Observable<any> {
     this.resetLang(lang);
-    return this.getTranslation(lang);
+    return this.getTranslation(lang, true);
   }
 
   /**
